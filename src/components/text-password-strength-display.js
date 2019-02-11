@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View, Text,
 } from 'react-native';
+import { Icon } from 'native-base';
 import PropTypes from 'prop-types';
 
 // Components
@@ -23,13 +24,22 @@ function TextPasswordStrengthDisplay({
   levels,
   wrapperStyle,
   labelStyle,
+  iconCfg
 }) {
   const score = scorePassword(password, minLength, scoreLimit, variations);
   const { label, labelColor } = calculateLevel(score, levels);
+  const icon = <Icon type={iconCfg.type} name={iconCfg.name} style={{ color: labelColor, marginRight: 5 }} />;
+  const text = <Text style={[style.label, labelStyle, { color: labelColor }]}>{label}</Text>;
+  const both = (
+      <View style={{ flexDirection: 'row' }}>
+        {icon}
+        {text}
+      </View>
+    );
   return (
     <View style={[style.wrapper, wrapperStyle]}>
       {labelVisible && (touched || score !== 0)
-        ? <Text style={[style.label, labelStyle, { color: labelColor }]}>{label}</Text>
+        ? (iconCfg ? both : text)
         : null
       }
     </View>
@@ -48,6 +58,7 @@ TextPasswordStrengthDisplay.propTypes = {
   levels: PropTypes.array,
   wrapperStyle: PropTypes.object,
   labelStyle: PropTypes.object,
+  iconCfg: PropTypes.object
 };
 
 export default TextPasswordStrengthDisplay;
